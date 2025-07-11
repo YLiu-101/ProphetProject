@@ -18,6 +18,7 @@ interface BetCardProps {
     total_pool?: number
     resolved?: boolean
     outcome?: boolean | null
+    yes_percentage?: number
   }
   index?: number
 }
@@ -26,100 +27,152 @@ export default function BetCard({ bet, index = 0 }: BetCardProps) {
   const deadlineDate = new Date(bet.deadline)
   const isExpired = deadlineDate < new Date()
   const daysLeft = Math.ceil((deadlineDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
+  const hoursLeft = Math.ceil((deadlineDate.getTime() - new Date().getTime()) / (1000 * 60 * 60))
+  
+  // Mock probability for demo (in real app, calculate from bets)
+  const yesPercentage = bet.yes_percentage || Math.floor(Math.random() * 80) + 10
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      whileHover={{ y: -5 }}
+      whileHover={{ y: -4 }}
       className="group"
     >
       <Link href={`/bet/${bet.id}`}>
         <div className={cn(
-          "glass rounded-2xl p-6 h-full",
-          "border border-gray-200/50 dark:border-gray-700/50",
-          "hover:border-gray-300 dark:hover:border-gray-600",
+          "market-card rounded-xl p-5 h-full",
           "transition-all duration-300",
           "relative overflow-hidden"
         )}>
-          {/* Subtle gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-gray-100/20 dark:to-gray-800/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          {/* Market status badge */}
+          <div className="absolute top-3 right-3">
+            {bet.resolved ? (
+              <span className="badge-resolved">Resolved</span>
+            ) : isExpired ? (
+              <span className="badge-market bg-orange-500/10 border-orange-500/30 text-orange-500">
+                Pending
+              </span>
+            ) : (
+              <span className="badge-active">Active</span>
+            )}
+          </div>
           
           {/* Content */}
           <div className="relative z-10">
-            {/* Status indicator */}
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                {bet.resolved ? (
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-gray-400 rounded-full" />
-                    <span className="text-xs font-medium text-gray-500 dark:text-gray-400">Resolved</span>
-                  </div>
-                ) : isExpired ? (
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-orange-500 rounded-full" />
-                    <span className="text-xs font-medium text-orange-600 dark:text-orange-400">Pending Resolution</span>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                    <span className="text-xs font-medium text-green-600 dark:text-green-400">Active</span>
-                  </div>
-                )}
-              </div>
-              
-              {/* Time left */}
-              {!bet.resolved && !isExpired && (
-                <span className="text-xs text-gray-500 dark:text-gray-400">
-                  {daysLeft} {daysLeft === 1 ? 'day' : 'days'} left
-                </span>
-              )}
-            </div>
-
             {/* Title */}
-            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2 line-clamp-2">
+            <h3 className="text-base font-semibold text-gray-100 mb-3 line-clamp-2 pr-20">
               {bet.title}
             </h3>
 
-            {/* Description */}
-            {bet.description && (
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
-                {bet.description}
-              </p>
-            )}
-
-            {/* Stats */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                {/* Participants */}
-                <div className="flex items-center gap-1">
-                  <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                  </svg>
-                  <span className="text-sm text-gray-600 dark:text-gray-400">
-                    {bet.participant_count || 0}
-                  </span>
+            {/* Probability Display */}
+            {!bet.resolved && (
+              <div className="mb-4">
+                <div className="flex justify-between items-center mb-2">
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl font-bold text-market-green">{yesPercentage}%</span>
+                      <span className="text-xs text-gray-500">YES</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl font-bold text-market-red">{100 - yesPercentage}%</span>
+                      <span className="text-xs text-gray-500">NO</span>
+                    </div>
+                  </div>
                 </div>
-
-                {/* Pool */}
-                <div className="flex items-center gap-1">
-                  <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span className="text-sm text-gray-600 dark:text-gray-400">
-                    {bet.total_pool?.toFixed(0) || 0}
-                  </span>
+                
+                {/* Probability bar */}
+                <div className="probability-bar">
+                  <div 
+                    className="probability-fill"
+                    style={{ width: `${yesPercentage}%` }}
+                  />
                 </div>
               </div>
+            )}
 
-              {/* Creator */}
-              {bet.creator && (
-                <span className="text-xs text-gray-500 dark:text-gray-400">
-                  by {bet.creator.username || bet.creator.full_name || 'Anonymous'}
-                </span>
-              )}
+            {/* Resolved outcome */}
+            {bet.resolved && bet.outcome !== null && (
+              <div className="mb-4">
+                <div className={cn(
+                  "text-2xl font-bold",
+                  bet.outcome ? "text-market-green" : "text-market-red"
+                )}>
+                  {bet.outcome ? "YES" : "NO"}
+                </div>
+                <span className="text-xs text-gray-500">Final outcome</span>
+              </div>
+            )}
+
+            {/* Market stats */}
+            <div className="grid grid-cols-3 gap-3 mb-4">
+              <div className="stat-card">
+                <div className="text-xs text-gray-500 mb-1">Volume</div>
+                <div className="text-sm font-semibold text-gray-200">
+                  {bet.total_pool?.toFixed(0) || 0}
+                </div>
+              </div>
+              <div className="stat-card">
+                <div className="text-xs text-gray-500 mb-1">Traders</div>
+                <div className="text-sm font-semibold text-gray-200">
+                  {bet.participant_count || 0}
+                </div>
+              </div>
+              <div className="stat-card">
+                <div className="text-xs text-gray-500 mb-1">
+                  {bet.resolved ? 'Ended' : 'Ends in'}
+                </div>
+                <div className="text-sm font-semibold text-gray-200">
+                  {bet.resolved ? (
+                    new Date(bet.deadline).toLocaleDateString('en-US', { 
+                      month: 'short', 
+                      day: 'numeric' 
+                    })
+                  ) : hoursLeft < 48 ? (
+                    `${hoursLeft}h`
+                  ) : (
+                    `${daysLeft}d`
+                  )}
+                </div>
+              </div>
             </div>
+
+            {/* Quick bet buttons (show on hover) */}
+            {!bet.resolved && !isExpired && (
+              <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <button
+                  onClick={(e) => {
+                    e.preventDefault()
+                    // In real app, this would open a bet modal
+                  }}
+                  className="flex-1 py-2 px-3 rounded-lg btn-bet-yes text-sm font-semibold"
+                >
+                  Buy YES
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault()
+                    // In real app, this would open a bet modal
+                  }}
+                  className="flex-1 py-2 px-3 rounded-lg btn-bet-no text-sm font-semibold"
+                >
+                  Buy NO
+                </button>
+              </div>
+            )}
+
+            {/* Creator info */}
+            {bet.creator && (
+              <div className="mt-3 pt-3 border-t border-gray-800">
+                <span className="text-xs text-gray-500">
+                  Created by{' '}
+                  <span className="text-gray-400">
+                    {bet.creator.username || bet.creator.full_name || 'Anonymous'}
+                  </span>
+                </span>
+              </div>
+            )}
           </div>
         </div>
       </Link>
