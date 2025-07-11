@@ -1,26 +1,356 @@
-@import "tailwindcss";
+@import "tailwindcss/preflight";
+@tailwind utilities;
 
+/* Prediction Market Color Palette */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --market-green: #10b981;
+  --market-red: #ef4444;
+  --market-blue: #3b82f6;
+  --market-purple: #8b5cf6;
+  --market-yellow: #f59e0b;
+  --market-gray: #6b7280;
+  --market-dark: #111827;
+  --market-light: #f9fafb;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Glass morphism base styles */
+.glass {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+.glass-heavy {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.glass-light {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.dark .glass {
+  background: rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark .glass-heavy {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dark .glass-light {
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Market-specific glass styles */
+.glass-market {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+}
+
+.dark .glass-market {
+  background: rgba(17, 24, 39, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(to right, #111827, #6b7280);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.dark .gradient-text {
+  background: linear-gradient(to right, #f3f4f6, #9ca3af);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Market gradient text */
+.gradient-market {
+  background: linear-gradient(135deg, var(--market-blue), var(--market-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Probability indicators */
+.probability-bar {
+  position: relative;
+  height: 6px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.dark .probability-bar {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.probability-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: linear-gradient(90deg, var(--market-red), var(--market-yellow), var(--market-green));
+  border-radius: 9999px;
+  transition: width 0.3s ease;
+}
+
+/* Market cards */
+.market-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.market-card:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.1);
+}
+
+.dark .market-card {
+  background: rgba(17, 24, 39, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.dark .market-card:hover {
+  background: rgba(17, 24, 39, 0.6);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* Betting buttons */
+.btn-bet-yes {
+  background: linear-gradient(135deg, var(--market-green), #059669);
+  color: white;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-bet-yes:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+}
+
+.btn-bet-no {
+  background: linear-gradient(135deg, var(--market-red), #dc2626);
+  color: white;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-bet-no:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
+}
+
+/* Market stats */
+.stat-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  padding: 1rem;
+  border-radius: 0.75rem;
+}
+
+.dark .stat-card {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Subtle animations */
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+.animate-pulse-slow {
+  animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Custom animations */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@keyframes glow {
+  from {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+  }
+  to {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2), 0 0 30px rgba(255, 255, 255, 0.1);
+  }
 }
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .5;
+  }
+}
+
+/* Market-specific backgrounds */
+.gradient-radial-market {
+  background: radial-gradient(circle at 30% 107%, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
+              radial-gradient(circle at 80% 50%, rgba(139, 92, 246, 0.05) 0%, transparent 50%),
+              radial-gradient(circle at 20% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
+}
+
+/* Elegant scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #374151;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #4b5563;
+}
+
+/* Remove focus outlines and add custom ones */
+*:focus {
+  outline: none;
+}
+
+*:focus-visible {
+  outline: 2px solid #9ca3af;
+  outline-offset: 2px;
+  border-radius: 0.375rem;
+}
+
+.dark *:focus-visible {
+  outline-color: #4b5563;
+}
+
+/* Beautiful gradients */
+.gradient-mesh {
+  background-image: 
+    radial-gradient(at 47% 33%, hsla(162, 77%, 85%, 0.1) 0px, transparent 50%),
+    radial-gradient(at 82% 65%, hsla(218, 77%, 85%, 0.1) 0px, transparent 50%);
+}
+
+/* Noise texture overlay for depth */
+.noise::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.02;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+/* Form inputs - Market style */
+.input-market {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.input-market:focus {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: var(--market-blue);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.dark .input-market {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dark .input-market:focus {
+  background: rgba(0, 0, 0, 0.3);
+  border-color: var(--market-blue);
+}
+
+/* Market badges */
+.badge-market {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.badge-active {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.3);
+  color: var(--market-green);
+}
+
+.badge-resolved {
+  background: rgba(107, 114, 128, 0.1);
+  border-color: rgba(107, 114, 128, 0.3);
+  color: var(--market-gray);
+}
+
+/* Base styles */
+body {
+  background-color: #fafafa;
+  color: #030712;
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+.dark body {
+  background-color: #030712;
+  color: #f3f4f6;
+}
+
+/* Market-specific utility classes */
+.text-market-green { color: var(--market-green); }
+.text-market-red { color: var(--market-red); }
+.text-market-blue { color: var(--market-blue); }
+.text-market-purple { color: var(--market-purple); }
+.bg-market-green { background-color: var(--market-green); }
+.bg-market-red { background-color: var(--market-red); }
+.bg-market-blue { background-color: var(--market-blue); }
+.bg-market-purple { background-color: var(--market-purple); }
