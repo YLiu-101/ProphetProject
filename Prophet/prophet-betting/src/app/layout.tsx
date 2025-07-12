@@ -1,21 +1,40 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
+import WeaverBackground from "@/components/WeaverBackground";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Prophet - Bet on Everything",
-  description: "Create and bet on anything. Personal goals, real-world events, with friend or AI arbitrators.",
+  title: "Prophet - Prediction Markets",
+  description: "Trade on the future. Create and bet on prediction markets with AI arbitration.",
+  keywords: ["prediction markets", "betting", "AI", "trading", "future"],
+  authors: [{ name: "Prophet" }],
+  creator: "Prophet",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://prophet.bet",
+    title: "Prophet - Prediction Markets",
+    description: "Trade on the future. Create and bet on prediction markets with AI arbitration.",
+    siteName: "Prophet",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Prophet - Prediction Markets",
+    description: "Trade on the future. Create and bet on prediction markets with AI arbitration.",
+    creator: "@prophet",
+  },
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 1,
+  },
 };
 
 export default function RootLayout({
@@ -25,11 +44,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <Navigation />
-        {children}
+      <body className={`${inter.variable} font-sans antialiased`}>
+        <WeaverBackground />
+        <div className="min-h-screen">
+          <Navigation />
+          <main className="relative">
+            {children}
+          </main>
+        </div>
       </body>
     </html>
   );

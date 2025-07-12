@@ -1,356 +1,740 @@
-@import "tailwindcss/preflight";
-@tailwind utilities;
+/* Google Fonts Import for Glass Weaver Typography */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
-/* Prediction Market Color Palette */
+@import "tailwindcss";
+
+/* Glass Weaver Design System - "Event Horizon" */
 :root {
-  --market-green: #10b981;
-  --market-red: #ef4444;
-  --market-blue: #3b82f6;
-  --market-purple: #8b5cf6;
-  --market-yellow: #f59e0b;
-  --market-gray: #6b7280;
-  --market-dark: #111827;
-  --market-light: #f9fafb;
+  /* Event Horizon Palette */
+  --bg-void: #09090B;              /* Deep charcoal/midnight - the void between stars */
+  --bg-surface: rgba(20, 20, 23, 0.8);  /* Glass surface with transparency */
+  --bg-elevated: rgba(30, 30, 35, 0.9); /* Elevated glass panels */
+  --bg-muted: rgba(15, 15, 18, 0.6);    /* Subtle background variations */
+  
+  /* The Thread of Time - Primary Accent */
+  --accent-primary: #00A99D;        /* Electric cyan - the weaver's thread */
+  --accent-primary-glow: rgba(0, 169, 157, 0.3);
+  --accent-primary-bright: #00D4C7; /* Brighter variation for active states */
+  
+  /* Ethereal Depth - Secondary Accent */
+  --accent-secondary: #7C5BFF;      /* Ethereal violet - background gradients */
+  --accent-secondary-glow: rgba(124, 91, 255, 0.2);
+  --accent-secondary-soft: rgba(124, 91, 255, 0.1);
+  
+  /* Crystalline Text */
+  --text-primary: #FFFFFF;          /* Pure white for maximum impact */
+  --text-secondary: #AEAEB2;        /* Off-white for softer readability */
+  --text-tertiary: #6B6B70;         /* Muted for subtle information */
+  --text-muted: #44444A;            /* Very subtle text */
+  
+  /* Luminous Borders */
+  --border-glass: rgba(255, 255, 255, 0.1);
+  --border-subtle: rgba(255, 255, 255, 0.05);
+  --border-glow: rgba(0, 169, 157, 0.5);
+  --border-ethereal: rgba(124, 91, 255, 0.3);
+  
+  /* Crystalline Shadows */
+  --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --shadow-elevated: 0 16px 64px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 40px var(--accent-primary-glow);
+  --shadow-ethereal: 0 0 60px var(--accent-secondary-glow);
+  
+  /* Status Colors - Enhanced for Glass Weaver */
+  --status-success: #22c55e;
+  --status-error: #ef4444;
+  --status-warning: #f59e0b;
+  --status-info: var(--accent-primary);
 }
 
-/* Glass morphism base styles */
+/* Base Styles - The Canvas */
+* {
+  border-color: var(--border-glass);
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: var(--bg-void);
+  color: var(--text-primary);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+  font-weight: 400;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Weaver Background Canvas */
+.weaver-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Glass System - Crystalline Components */
 .glass {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 16px;
+  transition: all 0.3s ease;
 }
 
-.glass-heavy {
-  background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+.glass:hover {
+  background: var(--bg-elevated);
+  border-color: var(--border-glow);
+  box-shadow: var(--shadow-glow);
+  transform: translateY(-2px);
+}
+
+.glass-subtle {
+  background: var(--bg-muted);
+  border: 1px solid var(--border-subtle);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 12px;
+}
+
+.glass-elevated {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-glass);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+  box-shadow: var(--shadow-glass);
+  border-radius: 20px;
 }
 
-.glass-light {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+/* Typography - Geometric & Variable */
+.text-prophet {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+
+.text-geometric {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.text-variable {
+  font-family: 'Inter', sans-serif;
+  font-variation-settings: "wght" 400;
+  transition: font-variation-settings 0.2s ease;
+}
+
+.text-variable:hover {
+  font-variation-settings: "wght" 500;
+}
+
+/* Buttons - Crystalline & Luminous */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.875rem 2rem;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  text-decoration: none;
+  border: 1px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.btn:hover::before {
+  transform: translateX(100%);
+}
+
+.btn-primary {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.btn-primary:hover {
+  border-color: var(--accent-primary);
+  box-shadow: var(--shadow-glow), 0 0 20px var(--accent-secondary-glow);
+  transform: translateY(-2px);
+  font-weight: 700;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+}
+
+.btn-secondary:hover {
+  background: var(--bg-muted);
+  color: var(--text-primary);
+  border-color: var(--border-glass);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid transparent;
+}
+
+.btn-ghost:hover {
+  background: var(--bg-muted);
+  color: var(--text-primary);
+  border-color: var(--border-subtle);
+}
+
+/* Input Styles - Glass Interface */
+.input {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-glass);
+  border-radius: 12px;
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: all 0.3s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px var(--accent-primary-glow);
+  background: var(--bg-elevated);
+}
+
+.input::placeholder {
+  color: var(--text-tertiary);
+}
+
+/* Navigation - Floating Glass */
+.nav {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 16px;
+  margin: 1rem;
+  box-shadow: var(--shadow-glass);
+}
+
+.nav-item {
+  padding: 0.75rem 1.25rem;
+  border-radius: 12px;
+  color: var(--text-secondary);
+  transition: all 0.3s ease;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  position: relative;
+}
+
+.nav-item:hover {
+  background: var(--bg-muted);
+  color: var(--text-primary);
+  transform: translateY(-1px);
+}
+
+.nav-item.active {
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  color: var(--text-primary);
+  box-shadow: var(--shadow-glow);
+}
+
+/* Card Styles - Crystalline Panels */
+.card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-glass);
+  border-radius: 20px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, var(--accent-secondary-soft), transparent);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.card:hover::before {
+  opacity: 1;
+}
+
+.card:hover {
+  background: var(--bg-elevated);
+  border-color: var(--border-glow);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-elevated), var(--shadow-glow);
+}
+
+.card-elevated {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-glass);
+  box-shadow: var(--shadow-glass);
+}
+
+/* Feature Cards - Special Crystalline Effects */
+.feature-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-glass);
+  border-radius: 24px;
+  padding: 2rem;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: all 0.5s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, var(--accent-secondary-soft), transparent);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.5s ease;
+}
+
+.feature-card:hover::before {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.feature-card:hover {
+  background: var(--bg-elevated);
+  border-color: var(--accent-primary);
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-elevated), var(--shadow-glow);
+}
+
+/* Icon Styles - Luminous Graphics */
+.icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--text-secondary);
+  transition: all 0.3s ease;
+}
+
+.icon:hover {
+  color: var(--accent-primary);
+  filter: drop-shadow(0 0 8px var(--accent-primary-glow));
+}
+
+.icon-lg {
+  width: 2rem;
+  height: 2rem;
+}
+
+.icon-feature {
+  width: 3rem;
+  height: 3rem;
+  color: var(--accent-primary);
+  transition: all 0.5s ease;
+}
+
+.feature-card:hover .icon-feature {
+  color: var(--accent-primary-bright);
+  filter: drop-shadow(0 0 16px var(--accent-primary-glow));
+  transform: scale(1.1);
+}
+
+/* Market Card - Trading Interface */
+.market-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-glass);
+  border-radius: 20px;
+  padding: 1.5rem;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.market-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, var(--accent-secondary-soft), transparent);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.market-card:hover::before {
+  opacity: 1;
+}
+
+.market-card:hover {
+  background: var(--bg-elevated);
+  border-color: var(--accent-primary);
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-elevated), var(--shadow-glow);
+}
+
+/* Probability Visualization */
+.probability-bar {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
 
-.dark .glass {
-  background: rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.dark .glass-heavy {
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.dark .glass-light {
-  background: rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-/* Market-specific glass styles */
-.glass-market {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-}
-
-.dark .glass-market {
-  background: rgba(17, 24, 39, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-}
-
-/* Gradient text */
-.gradient-text {
-  background: linear-gradient(to right, #111827, #6b7280);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.dark .gradient-text {
-  background: linear-gradient(to right, #f3f4f6, #9ca3af);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Market gradient text */
-.gradient-market {
-  background: linear-gradient(135deg, var(--market-blue), var(--market-purple));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Probability indicators */
-.probability-bar {
-  position: relative;
-  height: 6px;
-  background: rgba(0, 0, 0, 0.1);
-  border-radius: 9999px;
-  overflow: hidden;
-}
-
-.dark .probability-bar {
-  background: rgba(255, 255, 255, 0.1);
-}
-
 .probability-fill {
-  position: absolute;
-  left: 0;
-  top: 0;
   height: 100%;
-  background: linear-gradient(90deg, var(--market-red), var(--market-yellow), var(--market-green));
-  border-radius: 9999px;
-  transition: width 0.3s ease;
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-primary-bright));
+  border-radius: 3px;
+  transition: width 0.6s ease;
+  box-shadow: 0 0 8px var(--accent-primary-glow);
 }
 
-/* Market cards */
-.market-card {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  transition: all 0.3s ease;
-}
-
-.market-card:hover {
-  background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px);
-  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.1);
-}
-
-.dark .market-card {
-  background: rgba(17, 24, 39, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.dark .market-card:hover {
-  background: rgba(17, 24, 39, 0.6);
-  border-color: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.3);
-}
-
-/* Betting buttons */
-.btn-bet-yes {
-  background: linear-gradient(135deg, var(--market-green), #059669);
-  color: white;
+/* Status System */
+.status-badge {
+  padding: 0.375rem 0.875rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
   font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: 'Inter', sans-serif;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   transition: all 0.3s ease;
 }
 
-.btn-bet-yes:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+.status-active {
+  background: rgba(34, 197, 94, 0.2);
+  color: var(--status-success);
+  border: 1px solid rgba(34, 197, 94, 0.4);
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.3);
 }
 
-.btn-bet-no {
-  background: linear-gradient(135deg, var(--market-red), #dc2626);
-  color: white;
-  font-weight: 600;
+.status-resolved {
+  background: var(--bg-muted);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+}
+
+.status-pending {
+  background: rgba(245, 158, 11, 0.2);
+  color: var(--status-warning);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.3);
+}
+
+/* Theme Toggle - Glass Control */
+.theme-toggle {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-glass);
+  border-radius: 24px;
+  padding: 0.375rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   transition: all 0.3s ease;
 }
 
-.btn-bet-no:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
+.theme-toggle-btn {
+  padding: 0.5rem;
+  border-radius: 20px;
+  background: transparent;
+  color: var(--text-tertiary);
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
 }
 
-/* Market stats */
-.stat-card {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  padding: 1rem;
-  border-radius: 0.75rem;
+.theme-toggle-btn.active {
+  background: var(--accent-primary);
+  color: var(--text-primary);
+  box-shadow: 0 0 12px var(--accent-primary-glow);
 }
 
-.dark .stat-card {
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+.theme-toggle-btn:hover:not(.active) {
+  background: var(--bg-muted);
+  color: var(--text-secondary);
 }
 
-/* Subtle animations */
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-.animate-glow {
-  animation: glow 2s ease-in-out infinite alternate;
-}
-
-.animate-pulse-slow {
-  animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-/* Custom animations */
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-20px);
-  }
-}
-
-@keyframes glow {
+/* Animations - Temporal Flow */
+@keyframes weave-in {
   from {
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
   }
   to {
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2), 0 0 30px rgba(255, 255, 255, 0.1);
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 
-@keyframes pulse {
+@keyframes thread-glow {
   0%, 100% {
-    opacity: 1;
+    opacity: 0.3;
+    transform: scale(1);
   }
   50% {
-    opacity: .5;
+    opacity: 0.7;
+    transform: scale(1.05);
   }
 }
 
-/* Market-specific backgrounds */
-.gradient-radial-market {
-  background: radial-gradient(circle at 30% 107%, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
-              radial-gradient(circle at 80% 50%, rgba(139, 92, 246, 0.05) 0%, transparent 50%),
-              radial-gradient(circle at 20% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
+@keyframes crystalline-pulse {
+  0%, 100% {
+    box-shadow: 0 0 20px var(--accent-primary-glow);
+  }
+  50% {
+    box-shadow: 0 0 40px var(--accent-primary-glow), 0 0 60px var(--accent-secondary-glow);
+  }
 }
 
-/* Elegant scrollbar */
+.animate-weave-in {
+  animation: weave-in 0.6s ease-out;
+}
+
+.animate-thread-glow {
+  animation: thread-glow 2s ease-in-out infinite;
+}
+
+.animate-crystalline-pulse {
+  animation: crystalline-pulse 3s ease-in-out infinite;
+}
+
+/* Scrollbar - Ethereal */
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #d1d5db;
-  border-radius: 9999px;
+  background: var(--accent-primary);
+  border-radius: 4px;
+  box-shadow: 0 0 8px var(--accent-primary-glow);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
+  background: var(--accent-primary-bright);
 }
 
-.dark ::-webkit-scrollbar-thumb {
-  background: #374151;
-}
-
-.dark ::-webkit-scrollbar-thumb:hover {
-  background: #4b5563;
-}
-
-/* Remove focus outlines and add custom ones */
-*:focus {
-  outline: none;
-}
-
-*:focus-visible {
-  outline: 2px solid #9ca3af;
+/* Focus States - Luminous */
+:focus-visible {
+  outline: 2px solid var(--accent-primary);
   outline-offset: 2px;
-  border-radius: 0.375rem;
+  box-shadow: 0 0 0 4px var(--accent-primary-glow);
 }
 
-.dark *:focus-visible {
-  outline-color: #4b5563;
+/* Loading States - Temporal */
+.loading {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-muted);
+  animation: temporal-pulse 2s ease-in-out infinite;
 }
 
-/* Beautiful gradients */
-.gradient-mesh {
-  background-image: 
-    radial-gradient(at 47% 33%, hsla(162, 77%, 85%, 0.1) 0px, transparent 50%),
-    radial-gradient(at 82% 65%, hsla(218, 77%, 85%, 0.1) 0px, transparent 50%);
+@keyframes temporal-pulse {
+  0%, 100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.8;
+  }
 }
 
-/* Noise texture overlay for depth */
-.noise::before {
-  content: "";
+/* Responsive Design - Crystalline Adaptation */
+@media (max-width: 768px) {
+  .btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.8125rem;
+  }
+  
+  .market-card {
+    padding: 1.25rem;
+  }
+  
+  .feature-card {
+    padding: 1.5rem;
+  }
+  
+  .text-prophet {
+    font-size: 2rem;
+  }
+}
+
+/* Utilities - Glass Weaver */
+.transition-glass {
+  transition: all 0.4s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+}
+
+.hover-glow:hover {
+  box-shadow: var(--shadow-glow);
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+/* Container - Crystalline Layout */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding: 0 2rem;
+  }
+}
+
+/* Separators - Luminous Threads */
+.separator {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
+  border: none;
+  margin: 2rem 0;
+}
+
+.divider {
+  border-top: 1px solid var(--border-glass);
+  margin: 2rem 0;
+}
+
+/* Badge - Crystalline Labels */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.375rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-glass);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Success States */
+.text-success {
+  color: var(--status-success);
+}
+
+.text-error {
+  color: var(--status-error);
+}
+
+.text-warning {
+  color: var(--status-warning);
+}
+
+.text-info {
+  color: var(--status-info);
+}
+
+.text-primary {
+  color: var(--text-primary);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-tertiary {
+  color: var(--text-tertiary);
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+/* Glass Weaver Landing Elements */
+.hero-glow {
   position: absolute;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  opacity: 0.02;
-  mix-blend-mode: overlay;
+  top: 50%;
+  left: 50%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, var(--accent-secondary-glow), transparent);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: thread-glow 4s ease-in-out infinite;
   pointer-events: none;
 }
 
-/* Form inputs - Market style */
-.input-market {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(10px);
-  transition: all 0.3s ease;
+.floating-title {
+  position: relative;
+  z-index: 10;
+  animation: weave-in 1s ease-out;
 }
 
-.input-market:focus {
-  background: rgba(255, 255, 255, 0.04);
-  border-color: var(--market-blue);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+.glass-panel {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-glass);
+  border-radius: 24px;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow: var(--shadow-glass);
 }
 
-.dark .input-market {
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
 
-.dark .input-market:focus {
-  background: rgba(0, 0, 0, 0.3);
-  border-color: var(--market-blue);
-}
-
-/* Market badges */
-.badge-market {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.25rem 0.75rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.badge-active {
-  background: rgba(16, 185, 129, 0.1);
-  border-color: rgba(16, 185, 129, 0.3);
-  color: var(--market-green);
-}
-
-.badge-resolved {
-  background: rgba(107, 114, 128, 0.1);
-  border-color: rgba(107, 114, 128, 0.3);
-  color: var(--market-gray);
-}
-
-/* Base styles */
-body {
-  background-color: #fafafa;
-  color: #030712;
-  font-feature-settings: "rlig" 1, "calt" 1;
-}
-
-.dark body {
-  background-color: #030712;
-  color: #f3f4f6;
-}
-
-/* Market-specific utility classes */
-.text-market-green { color: var(--market-green); }
-.text-market-red { color: var(--market-red); }
-.text-market-blue { color: var(--market-blue); }
-.text-market-purple { color: var(--market-purple); }
-.bg-market-green { background-color: var(--market-green); }
-.bg-market-red { background-color: var(--market-red); }
-.bg-market-blue { background-color: var(--market-blue); }
-.bg-market-purple { background-color: var(--market-purple); }

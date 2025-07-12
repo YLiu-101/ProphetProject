@@ -1,7 +1,6 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { cn } from '@/lib/utils'
 import Link from 'next/link'
 
 interface BetCardProps {
@@ -32,148 +31,152 @@ export default function BetCard({ bet, index = 0 }: BetCardProps) {
   // Mock probability for demo (in real app, calculate from bets)
   const yesPercentage = bet.yes_percentage || Math.floor(Math.random() * 80) + 10
 
+  const getTimeLeft = () => {
+    if (bet.resolved) {
+      return new Date(bet.deadline).toLocaleDateString('en-US', { 
+        month: 'short', 
+        day: 'numeric' 
+      })
+    }
+    if (hoursLeft < 24) return `${hoursLeft}h`
+    if (daysLeft < 7) return `${daysLeft}d`
+    return new Date(bet.deadline).toLocaleDateString('en-US', { 
+      month: 'short', 
+      day: 'numeric' 
+    })
+  }
+
+  const getStatusBadge = () => {
+    if (bet.resolved) return 'status-resolved'
+    if (isExpired) return 'status-pending'
+    return 'status-active'
+  }
+
+  const getStatusText = () => {
+    if (bet.resolved) return 'Resolved'
+    if (isExpired) return 'Pending'
+    return 'Active'
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      whileHover={{ y: -4 }}
       className="group"
     >
       <Link href={`/bet/${bet.id}`}>
-        <div className={cn(
-          "market-card rounded-xl p-5 h-full",
-          "transition-all duration-300",
-          "relative overflow-hidden"
-        )}>
-          {/* Market status badge */}
-          <div className="absolute top-3 right-3">
-            {bet.resolved ? (
-              <span className="badge-resolved">Resolved</span>
-            ) : isExpired ? (
-              <span className="badge-market bg-orange-500/10 border-orange-500/30 text-orange-500">
-                Pending
-              </span>
-            ) : (
-              <span className="badge-active">Active</span>
-            )}
-          </div>
+        <div className="market-card h-full cursor-pointer">
           
-          {/* Content */}
-          <div className="relative z-10">
-            {/* Title */}
-            <h3 className="text-base font-semibold text-gray-100 mb-3 line-clamp-2 pr-20">
+          {/* Header */}
+          <div className="flex items-start justify-between mb-4">
+            <h3 className="text-lg font-semibold line-clamp-2 flex-1 pr-4" style={{ color: 'var(--text-primary)' }}>
               {bet.title}
             </h3>
+            <span className={`status-badge ${getStatusBadge()}`}>
+              {getStatusText()}
+            </span>
+          </div>
 
-            {/* Probability Display */}
-            {!bet.resolved && (
-              <div className="mb-4">
-                <div className="flex justify-between items-center mb-2">
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-2">
-                      <span className="text-2xl font-bold text-market-green">{yesPercentage}%</span>
-                      <span className="text-xs text-gray-500">YES</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-2xl font-bold text-market-red">{100 - yesPercentage}%</span>
-                      <span className="text-xs text-gray-500">NO</span>
-                    </div>
+          {/* Probability Display */}
+          {!bet.resolved && (
+            <div className="mb-6">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center space-x-6">
+                  <div className="flex items-center space-x-2">
+                    <span className="text-2xl font-bold text-success">{yesPercentage}%</span>
+                    <span className="text-sm" style={{ color: 'var(--text-tertiary)' }}>YES</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-2xl font-bold text-error">{100 - yesPercentage}%</span>
+                    <span className="text-sm" style={{ color: 'var(--text-tertiary)' }}>NO</span>
                   </div>
                 </div>
-                
-                {/* Probability bar */}
-                <div className="probability-bar">
-                  <div 
-                    className="probability-fill"
-                    style={{ width: `${yesPercentage}%` }}
-                  />
-                </div>
               </div>
-            )}
-
-            {/* Resolved outcome */}
-            {bet.resolved && bet.outcome !== null && (
-              <div className="mb-4">
-                <div className={cn(
-                  "text-2xl font-bold",
-                  bet.outcome ? "text-market-green" : "text-market-red"
-                )}>
-                  {bet.outcome ? "YES" : "NO"}
-                </div>
-                <span className="text-xs text-gray-500">Final outcome</span>
-              </div>
-            )}
-
-            {/* Market stats */}
-            <div className="grid grid-cols-3 gap-3 mb-4">
-              <div className="stat-card">
-                <div className="text-xs text-gray-500 mb-1">Volume</div>
-                <div className="text-sm font-semibold text-gray-200">
-                  {bet.total_pool?.toFixed(0) || 0}
-                </div>
-              </div>
-              <div className="stat-card">
-                <div className="text-xs text-gray-500 mb-1">Traders</div>
-                <div className="text-sm font-semibold text-gray-200">
-                  {bet.participant_count || 0}
-                </div>
-              </div>
-              <div className="stat-card">
-                <div className="text-xs text-gray-500 mb-1">
-                  {bet.resolved ? 'Ended' : 'Ends in'}
-                </div>
-                <div className="text-sm font-semibold text-gray-200">
-                  {bet.resolved ? (
-                    new Date(bet.deadline).toLocaleDateString('en-US', { 
-                      month: 'short', 
-                      day: 'numeric' 
-                    })
-                  ) : hoursLeft < 48 ? (
-                    `${hoursLeft}h`
-                  ) : (
-                    `${daysLeft}d`
-                  )}
-                </div>
+              
+              {/* Probability bar */}
+              <div className="probability-bar">
+                <div 
+                  className="probability-fill"
+                  style={{ width: `${yesPercentage}%` }}
+                />
               </div>
             </div>
+          )}
 
-            {/* Quick bet buttons (show on hover) */}
-            {!bet.resolved && !isExpired && (
-              <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <button
-                  onClick={(e) => {
-                    e.preventDefault()
-                    // In real app, this would open a bet modal
-                  }}
-                  className="flex-1 py-2 px-3 rounded-lg btn-bet-yes text-sm font-semibold"
-                >
-                  Buy YES
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.preventDefault()
-                    // In real app, this would open a bet modal
-                  }}
-                  className="flex-1 py-2 px-3 rounded-lg btn-bet-no text-sm font-semibold"
-                >
-                  Buy NO
-                </button>
-              </div>
-            )}
-
-            {/* Creator info */}
-            {bet.creator && (
-              <div className="mt-3 pt-3 border-t border-gray-800">
-                <span className="text-xs text-gray-500">
-                  Created by{' '}
-                  <span className="text-gray-400">
-                    {bet.creator.username || bet.creator.full_name || 'Anonymous'}
-                  </span>
+          {/* Resolved outcome */}
+          {bet.resolved && bet.outcome !== null && (
+            <div className="mb-6">
+              <div className="flex items-center space-x-2">
+                <span className={`text-3xl font-bold ${bet.outcome ? 'text-success' : 'text-error'}`}>
+                  {bet.outcome ? 'YES' : 'NO'}
                 </span>
+                <span className="text-sm" style={{ color: 'var(--text-tertiary)' }}>Final outcome</span>
               </div>
-            )}
+            </div>
+          )}
+
+          {/* Market stats */}
+          <div className="grid grid-cols-3 gap-3 mb-6">
+            <div className="text-center">
+              <div className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
+                {bet.total_pool?.toFixed(0) || 0}
+              </div>
+              <div className="text-xs" style={{ color: 'var(--text-tertiary)' }}>Volume</div>
+            </div>
+            <div className="text-center">
+              <div className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
+                {bet.participant_count || 0}
+              </div>
+              <div className="text-xs" style={{ color: 'var(--text-tertiary)' }}>Traders</div>
+            </div>
+            <div className="text-center">
+              <div className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
+                {getTimeLeft()}
+              </div>
+              <div className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
+                {bet.resolved ? 'Ended' : 'Ends'}
+              </div>
+            </div>
           </div>
+
+          {/* Action buttons (show on hover) */}
+          {!bet.resolved && !isExpired && (
+            <div className="flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <button
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  // In real app, this would open a bet modal
+                }}
+                className="flex-1 btn btn-success py-2 text-sm"
+              >
+                Buy YES
+              </button>
+              <button
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  // In real app, this would open a bet modal
+                }}
+                className="flex-1 btn btn-error py-2 text-sm"
+              >
+                Buy NO
+              </button>
+            </div>
+          )}
+
+          {/* Creator info */}
+          {bet.creator && (
+            <div className="mt-4 pt-4 border-t" style={{ borderColor: 'var(--border-subtle)' }}>
+              <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
+                Created by{' '}
+                <span style={{ color: 'var(--text-secondary)' }}>
+                  {bet.creator.username || bet.creator.full_name || 'Anonymous'}
+                </span>
+              </span>
+            </div>
+          )}
         </div>
       </Link>
     </motion.div>

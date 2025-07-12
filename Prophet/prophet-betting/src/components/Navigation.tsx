@@ -3,7 +3,6 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { cn } from '@/lib/utils'
 import { useBalance } from '@/hooks/useBalance'
 import { createClient } from '@/lib/supabase/client'
 import { useEffect, useState } from 'react'
@@ -30,145 +29,174 @@ export default function Navigation() {
   }, [supabase])
 
   const navItems = [
-    { href: '/feed', label: 'Markets', icon: '📊' },
-    { href: '/create', label: 'Create', icon: '➕' },
+    { href: '/feed', label: 'Markets' },
+    { href: '/create', label: 'Create' },
   ]
 
-  if (!user) return null
+  // Don't show navigation on the home page
+  if (!user || pathname === '/') return null
 
   return (
-    <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      className="fixed top-0 left-0 right-0 z-50 px-4 py-4"
-    >
-      <div className="max-w-7xl mx-auto">
-        <div className="glass-market rounded-xl px-6 py-3 flex items-center justify-between border border-white/10">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="text-2xl font-bold gradient-market"
-            >
-              Prophet
-            </motion.div>
-          </Link>
-
-          {/* Center Navigation */}
-          <div className="hidden md:flex items-center gap-2">
+    <nav className="fixed top-0 left-0 right-0 z-50 nav">
+      <div className="container mx-auto px-4 py-4">
+        <div className="flex items-center justify-between">
+          
+          {/* Left Section - Navigation Links */}
+          <div className="flex items-center space-x-2">
             {navItems.map((item) => {
               const isActive = pathname === item.href
               return (
                 <Link key={item.href} href={item.href}>
                   <motion.div
-                    whileHover={{ scale: 1.02 }}
+                    whileHover={{ scale: 1.02, y: -1 }}
                     whileTap={{ scale: 0.98 }}
-                    className={cn(
-                      "px-4 py-2 rounded-lg transition-all duration-300",
-                      "flex items-center gap-2",
-                      isActive
-                        ? "bg-gradient-to-r from-market-blue/20 to-market-purple/20 text-white"
-                        : "hover:bg-white/5 text-gray-400 hover:text-gray-200"
-                    )}
+                    className={`nav-item ${isActive ? 'active' : ''}`}
                   >
-                    <span>{item.icon}</span>
-                    <span className="text-sm font-medium">
-                      {item.label}
-                    </span>
+                    {item.label}
                   </motion.div>
                 </Link>
               )
             })}
           </div>
 
-          {/* Right Section */}
-          <div className="flex items-center gap-3">
-            {/* Balance Display */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="glass-market rounded-lg px-4 py-2 border border-market-green/20"
-            >
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-gray-400">Balance</span>
-                <span className="text-sm font-bold text-market-green">
-                  {balance?.toFixed(0) || '0'}
-                </span>
-                <span className="text-xs text-gray-500">credits</span>
-              </div>
-            </motion.div>
+          {/* Right Section - User Controls */}
+          <div className="flex items-center space-x-4">
+            
+            {/* Balance Display - Glass Panel */}
+            <div className="hidden sm:block">
+              <motion.div 
+                whileHover={{ scale: 1.02 }}
+                className="glass px-4 py-2 rounded-2xl"
+              >
+                <div className="flex items-center space-x-3">
+                  <span className="text-sm text-secondary">Credits</span>
+                  <div className="flex items-center space-x-1">
+                    <motion.div
+                      animate={{ 
+                        boxShadow: [
+                          '0 0 0px var(--accent-primary-glow)',
+                          '0 0 8px var(--accent-primary-glow)',
+                          '0 0 0px var(--accent-primary-glow)'
+                        ]
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                      }}
+                      className="w-2 h-2 bg-accent-primary rounded-full"
+                    />
+                    <span className="text-sm font-semibold text-success">
+                      {balance?.toFixed(0) || '0'}
+                    </span>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
 
-            {/* User Menu */}
+            {/* User Menu - Crystalline Avatar */}
             <div className="relative">
               <motion.button
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ 
+                  scale: 1.05,
+                  boxShadow: '0 0 20px var(--accent-primary-glow)'
+                }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setShowUserMenu(!showUserMenu)}
-                className={cn(
-                  "w-10 h-10 rounded-lg",
-                  "bg-gradient-to-r from-market-blue to-market-purple",
-                  "flex items-center justify-center",
-                  "text-white font-bold",
-                  "shadow-lg"
-                )}
+                className="w-12 h-12 rounded-full glass flex items-center justify-center font-semibold text-sm border border-accent-primary relative overflow-hidden"
               >
-                {user?.email?.[0]?.toUpperCase() || 'U'}
+                {/* Crystalline background pattern */}
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-br from-accent-primary to-accent-secondary opacity-20"
+                  animate={{
+                    rotate: [0, 360]
+                  }}
+                  transition={{
+                    duration: 20,
+                    repeat: Infinity,
+                    ease: "linear"
+                  }}
+                />
+                <span className="relative z-10 text-primary">
+                  {user?.email?.[0]?.toUpperCase() || 'U'}
+                </span>
               </motion.button>
 
-              {/* Dropdown Menu */}
+              {/* Dropdown Menu - Glass Panel */}
               {showUserMenu && (
                 <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="absolute right-0 mt-2 w-48 glass-market rounded-lg border border-white/10 overflow-hidden"
+                  initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  className="absolute right-0 mt-3 w-72 glass-elevated rounded-2xl overflow-hidden shadow-elevated"
                 >
-                  <div className="p-3 border-b border-white/10">
-                    <p className="text-xs text-gray-400">Signed in as</p>
-                    <p className="text-sm text-gray-200 truncate">{user?.email}</p>
+                  {/* User Info Section */}
+                  <div className="p-6 border-b border-glass">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 rounded-full glass flex items-center justify-center font-semibold text-sm border border-accent-primary">
+                        <span className="text-primary">
+                          {user?.email?.[0]?.toUpperCase() || 'U'}
+                        </span>
+                      </div>
+                      <div>
+                        <p className="text-xs text-tertiary uppercase tracking-wider mb-1">Trader</p>
+                        <p className="text-sm font-medium text-primary truncate">{user?.email}</p>
+                      </div>
+                    </div>
+                    
+                    {/* Mobile Balance */}
+                    <div className="mt-4 sm:hidden">
+                      <div className="glass px-3 py-2 rounded-xl">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs text-secondary">Credits</span>
+                          <div className="flex items-center space-x-1">
+                            <div className="w-1.5 h-1.5 bg-accent-primary rounded-full animate-thread-glow" />
+                            <span className="text-xs font-semibold text-success">
+                              {balance?.toFixed(0) || '0'}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <button
-                    onClick={async () => {
-                      await supabase.auth.signOut()
-                      setShowUserMenu(false)
-                    }}
-                    className="w-full px-3 py-2 text-left text-sm text-gray-300 hover:bg-white/5 transition-colors"
-                  >
-                    Sign Out
-                  </button>
+                  
+                  {/* Menu Actions */}
+                  <div className="p-4">
+                    <motion.button
+                      whileHover={{ scale: 1.02, x: 4 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={async () => {
+                        await supabase.auth.signOut()
+                        setShowUserMenu(false)
+                      }}
+                      className="w-full px-4 py-3 text-left text-sm text-secondary hover:text-primary hover:bg-muted rounded-xl transition-all duration-200 flex items-center space-x-3"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                      </svg>
+                      <span>Sign Out</span>
+                    </motion.button>
+                  </div>
                 </motion.div>
               )}
             </div>
-          </div>
 
-          {/* Mobile Menu Button */}
-          <div className="md:hidden">
-            <button className="text-gray-400 hover:text-gray-200">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
+            {/* Mobile Menu Toggle - Crystalline */}
+            <div className="md:hidden">
+              <motion.button 
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="w-10 h-10 flex items-center justify-center text-secondary hover:text-primary transition-colors glass rounded-xl"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </motion.button>
+            </div>
           </div>
         </div>
-
-        {/* Market Ticker (optional decorative element) */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="mt-2 flex items-center gap-4 text-xs text-gray-500 px-6"
-        >
-          <span className="flex items-center gap-1">
-            <span className="w-2 h-2 bg-market-green rounded-full animate-pulse"></span>
-            Markets Online
-          </span>
-          <span>•</span>
-          <span>24/7 Trading</span>
-          <span>•</span>
-          <span>Instant Settlement</span>
-        </motion.div>
       </div>
-    </motion.nav>
+    </nav>
   )
 }
